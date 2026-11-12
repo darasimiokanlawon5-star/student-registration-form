@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Future School Portal</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+:root{--blue:#2563eb;--dark:#14213d;--bg:#f1f5f9;--white:#fff}
+body{background:var(--bg);color:#172033}
+header{background:var(--dark);color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+header h2{font-size:21px}
+header p{font-size:12px;color:#cbd5e1;margin-top:5px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button{padding:11px 16px;border:0;border-radius:7px;cursor:pointer;font-weight:bold}
+nav button.active{background:var(--blue);color:white}
+nav button:not(.active){background:#e2e8f0;color:var(--dark)}
+.container{max-width:1150px;margin:30px auto;padding:0 18px}
+.page{display:none}
+.page.active{display:block;animation:appear .35s}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(120deg,#14213d,#2563eb);color:white;padding:35px;border-radius:15px;margin-bottom:22px}
+.hero h1{font-size:30px;margin:12px 0}
+.hero p{color:#dbeafe}
+.card{background:white;padding:25px;border-radius:13px;box-shadow:0 4px 18px #0000000c;margin-bottom:20px}
+h2.section-title{color:var(--dark);margin-bottom:20px}
+.steps{display:flex;justify-content:space-between;gap:8px;margin-bottom:20px}
+.step{flex:1;text-align:center;color:#94a3b8;font-size:13px;font-weight:bold}
+.step span{display:block;width:32px;height:32px;border-radius:50%;background:#e2e8f0;margin:0 auto 7px;padding-top:8px}
+.step.active{color:var(--blue)}
+.step.active span{background:var(--blue);color:white}
+.progress{height:7px;background:#e2e8f0;border-radius:20px;margin-bottom:25px;overflow:hidden}
+.progress-bar{height:100%;width:33.33%;background:var(--blue);transition:.3s}
+.form-step{display:none}
+.form-step.active{display:block;animation:appear .3s}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.field{display:flex;flex-direction:column;gap:7px}
+.full{grid-column:1/-1}
+label{font-size:13px;font-weight:bold}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:7px;font-size:14px;background:white}
+input:focus,select:focus,textarea:focus{outline:2px solid #bfdbfe;border-color:var(--blue)}
+textarea{min-height:85px;resize:vertical}
+.photo-area{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.photo-preview{width:110px;height:110px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#64748b;font-size:12px}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.buttons{display:flex;justify-content:space-between;gap:10px;margin-top:25px;flex-wrap:wrap}
+.btn{padding:12px 19px;border:0;border-radius:7px;cursor:pointer;font-weight:bold}
+.primary{background:var(--blue);color:white}
+.secondary{background:#e2e8f0;color:#172033}
+.danger{background:#fee2e2;color:#b91c1c}
+.success{background:#dcfce7;color:#166534}
+.btn:hover{filter:brightness(.95)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.stat{background:white;padding:20px;border-radius:12px;border-left:4px solid var(--blue)}
+.stat p{font-size:13px;color:#64748b}
+.stat h2{font-size:27px;margin-top:8px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.toolbar input{flex:1;min-width:180px}
+.toolbar select{max-width:200px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:750px}
+th,td{padding:13px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:13px}
+th{background:#f8fafc;color:#475569}
+.badge{background:#dbeafe;color:#1d4ed8;padding:5px 9px;border-radius:20px;font-size:11px}
+.notice{padding:14px;background:#dcfce7;color:#166534;border-radius:8px;margin-bottom:18px;display:none}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:10;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-content{background:white;border-radius:13px;padding:25px;width:100%;max-width:550px;max-height:90vh;overflow:auto}
+.modal-content h2{margin-bottom:15px}
+.detail-row{padding:10px 0;border-bottom:1px solid #e2e8f0}
+.detail-row strong{display:inline-block;width:145px}
+.empty{text-align:center;padding:30px;color:#64748b}
+footer{text-align:center;padding:25px;color:#64748b;font-size:12px}
+@media(max-width:700px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.grid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.hero{padding:23px}
+.card{padding:17px}
+header{justify-content:center;text-align:center}
+}
+@media print{
+header,nav,.no-print,footer{display:none!important}
+body{background:white}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>
+<h2>BRIGHT FUTURE SCHOOL</h2>
+<p>STUDENT ADMISSION & MANAGEMENT PORTAL</p>
+</div>
+
+<nav>
+<button class="active" onclick="showPage('register',this)">Register</button>
+<button onclick="showPage('dashboard',this)">Dashboard</button>
+</nav>
+</header>
+
+<div class="container">
+
+<!-- REGISTRATION PAGE -->
+
+<section id="register" class="page active">
+
+<div class="hero">
+<span>2026 / 2027 ADMISSION</span>
+<h1>Welcome to Bright Future School!</h1>
+<p>Register online and begin your educational journey with us.</p>
+</div>
+
+<div class="card">
+
+<h2 class="section-title">Student Registration</h2>
+
+<div class="notice" id="notice"></div>
+
+<div class="steps">
+<div class="step active" id="stepLabel1"><span>1</span>Student</div>
+<div class="step" id="stepLabel2"><span>2</span>Guardian</div>
+<div class="step" id="stepLabel3"><span>3</span>Review</div>
+</div>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<form id="studentForm">
+
+<!-- STEP 1 -->
+
+<div class="form-step active" id="step1">
+
+<h3>Student Information</h3>
+<br>
+
+<div class="photo-area full">
+<div class="photo-preview" id="photoPreview">Photo</div>
+<div class="field">
+<label>Upload Student Photograph</label>
+<input type="file" id="photo" accept="image/*">
+<small>Maximum image size: 2MB</small>
+</div>
+</div>
+
+<br>
+
+<div class="grid">
+
+<div class="field">
+<label>First Name *</label>
+<input id="firstName" required placeholder="Enter first name">
+</div>
+
+<div class="field">
+<label>Last Name *</label>
+<input id="lastName" required placeholder="Enter last name">
+</div>
+
+<div class="field">
+<label>Middle Name</label>
+<input id="middleName">
+</div>
+
+<div class="field">
+<label>Date of Birth *</label>
+<input type="date" id="dob" required>
+</div>
+
+<div class="field">
+<label>Gender *</label>
+<select id="gender" required>
+<option value="">Choose gender</option>
+<option>Male</option>
+<option>Female</option>
+</select>
+</div>
+
+<div class="field">
+<label>Class Applying For *</label>
+<select id="className" required>
+<option value="">Choose class</option>
+<option>Nursery 1</option>
+<option>Nursery 2</option>
+<option>Primary 1</option>
+<option>Primary 2</option>
+<option>Primary 3</option>
+<option>Primary 4</option>
+<option>Primary 5</option>
+<option>Primary 6</option>
+<option>JSS 1</option>
+<option>JSS 2</option>
+<option>JSS 3</option>
+<option>SS 1</option>
+<option>SS 2</option>
+<option>SS 3</option>
+</select>
+</div>
+
+<div class="field full">
+<label>Home Address *</label>
+<textarea id="address" required></textarea>
+</div>
+
+</div>
+
+<div class="buttons">
+<span></span>
+<button type="button" class="btn primary" onclick="nextStep(1)">Next Step →</button>
+</div>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="form-step" id="step2">
+
+<h3>Parent / Guardian Information</h3>
+<br>
+
+<div class="grid">
+
+<div class="field">
+<label>Parent Full Name *</label>
+<input id="parent" required>
+</div>
+
+<div class="field">
+<label>Relationship *</label>
+<select id="relationship" required>
+<option value="">Select relationship</option>
+<option>Father</option>
+<option>Mother</option>
+<option>Guardian</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="field">
+<label>Phone Number *</label>
+<input type="tel" id="phone" required pattern="[0-9+() -]{7,20}" placeholder="+234 800 000 0000">
+</div>
+
+<div class="field">
+<label>Email Address</label>
+<input type="email" id="email">
+</div>
+
+<div class="field full">
+<label>Additional Information</label>
+<textarea id="extra" placeholder="Any additional information..."></textarea>
+</div>
+
+</div>
+
+<div class="buttons">
+<button type="button" class="btn secondary" onclick="previousStep(2)">← Back</button>
+<button type="button" class="btn primary" onclick="nextStep(2)">Review Application →</button>
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="form-step" id="step3">
+
+<h3>Review Your Application</h3>
+<br>
+
+<div id="reviewDetails"></div>
+
+<div style="margin-top:20px">
+<label>
+<input type="checkbox" id="agree" style="width:auto">
+I confirm that the information provided is correct.
+</label>
+</div>
+
+<div class="buttons">
+<button type="button" class="btn secondary" onclick="previousStep(3)">← Back</button>
+<button type="submit" class="btn primary">Submit Application</button>
+</div>
+
+</div>
+
+</form>
+</div>
+</section>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page">
+
+<div class="hero">
+<h1>Admin Dashboard</h1>
+<p>Manage your school admission applications.</p>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<p>Total Students</p>
+<h2 id="total">0</h2>
+</div>
+
+<div class="stat">
+<p>Classes Registered</p>
+<h2 id="classes">0</h2>
+</div>
+
+<div class="stat">
+<p>Today's Registrations</p>
+<h2 id="today">0</h2>
+</div>
+
+<div class="stat">
+<p>School Session</p>
+<h2 style="font-size:20px">2026/27</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2 class="section-title">Student Management</h2>
+
+<div class="toolbar no-print">
+
+<input id="search" placeholder="Search student name or registration number..." oninput="renderStudents()">
+
+<select id="filterClass" onchange="renderStudents()">
+<option value="">All Classes</option>
+</select>
+
+<button class="btn success" onclick="exportCSV()">Export CSV</button>
+
+<button class="btn secondary" onclick="window.print()">Print</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Photo</th>
+<th>Reg Number</th>
+<th>Student Name</th>
+<th>Class</th>
+<th>Parent</th>
+<th>Phone</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="studentList"></tbody>
+
+</table>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- STUDENT DETAILS MODAL -->
+
+<div class="modal" id="detailsModal">
+<div class="modal-content">
+<h2>Student Profile</h2>
+<div id="studentDetails"></div>
+<br>
+<button class="btn secondary" onclick="closeModal()">Close</button>
+</div>
+</div>
+
+<footer>
+© 2026 Bright Future School | Online Registration System
+</footer>
+
+<script>
+
+// DATABASE STORAGE
+
+let students = JSON.parse(
+localStorage.getItem("brightSchool") || "[]"
+);
+
+let currentStep = 1;
+let photoData = "";
+
+// PAGE NAVIGATION
+
+function showPage(page,button){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active");
+});
+
+document.getElementById(page).classList.add("active");
+
+document.querySelectorAll("nav button").forEach(b=>{
+b.classList.remove("active");
+});
+
+button.classList.add("active");
+
+if(page==="dashboard") renderStudents();
+
+}
+
+// PHOTO PREVIEW
+
+document.getElementById("photo").addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(!file)return;
+
+if(file.size>2*1024*1024){
+alert("Photo must not exceed 2MB.");
+this.value="";
+return;
+}
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+photoData=e.target.result;
+
+document.getElementById("photoPreview").innerHTML=
+`<img src="${photoData}" alt="Student photograph">`;
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+// STEP VALIDATION
+
+function validateStep(step){
+
+let section=document.getElementById("step"+step);
+
+let fields=section.querySelectorAll("[required]");
+
+for(let field of fields){
+
+if(!field.checkValidity()){
+
+field.reportValidity();
+return false;
+
+}
+
+}
+
+return true;
+
+}
+
+// NEXT STEP
+
+function nextStep(step){
+
+if(!validateStep(step))return;
+
+if(step===1){
+document.getElementById("reviewDetails").innerHTML="";
+}
+
+if(step===2){
+showReview();
+}
+
+currentStep=step+1;
+updateSteps();
+
+}
+
+// PREVIOUS STEP
+
+function previousStep(step){
+
+currentStep=step-1;
+updateSteps();
+
+}
+
+// UPDATE PROGRESS
+
+function updateSteps(){
+
+document.querySelectorAll(".form-step").forEach(s=>{
+s.classList.remove("active");
+});
+
+document.getElementById("step"+currentStep).classList.add("active");
+
+for(let i=1;i<=3;i++){
+
+document.getElementById("stepLabel"+i)
+.classList.toggle("active",i<=currentStep);
+
+}
+
+document.getElementById("progressBar").style.width=
+(currentStep/3*100)+"%";
+
+}
+
+// REVIEW APPLICATION
+
+function showReview(){
+
+let fields={
+
+"First Name":"firstName",
+"Last Name":"lastName",
+"Middle Name":"middleName",
+"Date of Birth":"dob",
+"Gender":"gender",
+"Class":"className",
+"Address":"address",
+"Parent Name":"parent",
+"Relationship":"relationship",
+"Phone":"phone",
+"Email":"email"
+
+};
+
+let html="";
+
+for(let label in fields){
+
+let value=document.getElementById(fields[label]).value;
+
+html+=`
+<div style="padding:10px;border-bottom:1px solid #ddd">
+<strong>${label}:</strong> ${escapeHTML(value)}
+</div>`;
+
+}
+
+document.getElementById("reviewDetails").innerHTML=html;
+
+}
+
+// SAFE TEXT DISPLAY
+
+function escapeHTML(value){
+
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[c]));
+
+}
+
+// GENERATE REGISTRATION NUMBER
+
+function generateReg(){
+
+return "BFS-"+new Date().getFullYear()+"-"+Date.now().toString().slice(-7);
+
+}
+
+// SUBMIT APPLICATION
+
+document.getElementById("studentForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+if(!document.getElementById("agree").checked){
+
+alert("Please confirm your application details.");
+return;
+
+}
+
+let student={
+
+reg:generateReg(),
+photo:photoData,
+
+firstName:document.getElementById("firstName").value,
+lastName:document.getElementById("lastName").value,
+middleName:document.getElementById("middleName").value,
+dob:document.getElementById("dob").value,
+gender:document.getElementById("gender").value,
+className:document.getElementById("className").value,
+address:document.getElementById("address").value,
+
+parent:document.getElementById("parent").value,
+relationship:document.getElementById("relationship").value,
+phone:document.getElementById("phone").value,
+email:document.getElementById("email").value,
+extra:document.getElementById("extra").value,
+
+date:new Date().toISOString()
+
+};
+
+students.push(student);
+
+try{
+
+localStorage.setItem("brightSchool",JSON.stringify(students));
+
+}catch(error){
+
+students.pop();
+
+alert("Storage is full. Try using a smaller photograph.");
+
+return;
+
+}
+
+alert(
+"Registration Successful!\nYour Registration Number is: "+student.reg
+);
+
+this.reset();
+
+photoData="";
+
+document.getElementById("photoPreview").textContent="Photo";
+
+document.getElementById("notice").style.display="block";
+
+document.getElementById("notice").textContent=
+"Application submitted successfully! Registration Number: "+student.reg;
+
+currentStep=1;
+updateSteps();
+
+});
+
+// DASHBOARD
+
+function renderStudents(){
+
+let list=document.getElementById("studentList");
+
+let search=document.getElementById("search").value.toLowerCase();
+
+let selected=document.getElementById("filterClass").value;
+
+let classes=[...new Set(students.map(s=>s.className))];
+
+let filter=document.getElementById("filterClass");
+
+let old=filter.value;
+
+filter.innerHTML='<option value="">All Classes</option>';
+
+classes.forEach(c=>{
+
+let option=document.createElement("option");
+option.value=c;
+option.textContent=c;
+filter.appendChild(option);
+
+});
+
+filter.value=classes.includes(old)?old:selected;
+
+let filtered=students.filter(s=>{
+
+let name=(s.firstName+" "+s.lastName).toLowerCase();
+
+return(
+name.includes(search)||
+s.reg.toLowerCase().includes(search)
+)&&(!filter.value||s.className===filter.value);
+
+});
+
+list.innerHTML="";
+
+filtered.forEach(s=>{
+
+let tr=document.createElement("tr");
+
+let photoCell=document.createElement("td");
+
+if(s.photo){
+
+let img=document.createElement("img");
+img.src=s.photo;
+img.style.width="40px";
+img.style.height="40px";
+img.style.borderRadius="50%";
+img.style.objectFit="cover";
+photoCell.appendChild(img);
+
+}else{
+
+photoCell.textContent="No photo";
+
+}
+
+tr.appendChild(photoCell);
+
+let values=[
+s.reg,
+s.firstName+" "+s.lastName,
+s.className,
+s.parent,
+s.phone
+];
+
+values.forEach(v=>{
+
+let td=document.createElement("td");
+td.textContent=v;
+tr.appendChild(td);
+
+});
+
+let actions=document.createElement("td");
+
+let view=document.createElement("button");
+view.textContent="View";
+view.className="btn primary";
+view.style.padding="7px";
+view.onclick=()=>viewStudent(s.reg);
+
+let del=document.createElement("button");
+del.textContent="Delete";
+del.className="btn danger";
+del.style.padding="7px";
+del.style.marginLeft="5px";
+del.onclick=()=>deleteStudent(s.reg);
+
+actions.append(view,del);
+tr.appendChild(actions);
+
+list.appendChild(tr);
+
+});
+
+if(filtered.length===0){
+
+list.innerHTML=
+'<tr><td colspan="7" class="empty">No students found.</td></tr>';
+
+}
+
+document.getElementById("total").textContent=students.length;
+
+document.getElementById("classes").textContent=classes.length;
+
+let today=new Date().toDateString();
+
+document.getElementById("today").textContent=
+students.filter(s=>new Date(s.date).toDateString()===today).length;
+
+}
+
+// VIEW STUDENT PROFILE
+
+function viewStudent(reg){
+
+let s=students.find(x=>x.reg===reg);
+
+if(!s)return;
+
+let details=`
+
+${s.photo?
+'<img src="'+s.photo+'" style="width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:15px">'
+:''}
+
+<div class="detail-row"><strong>Registration:</strong> ${escapeHTML(s.reg)}</div>
+<div class="detail-row"><strong>Full Name:</strong> ${escapeHTML(s.firstName+" "+s.middleName+" "+s.lastName)}</div>
+<div class="detail-row"><strong>Date of Birth:</strong> ${escapeHTML(s.dob)}</div>
+<div class="detail-row"><strong>Gender:</strong> ${escapeHTML(s.gender)}</div>
+<div class="detail-row"><strong>Class:</strong> ${escapeHTML(s.className)}</div>
+<div class="detail-row"><strong>Address:</strong> ${escapeHTML(s.address)}</div>
+<div class="detail-row"><strong>Parent:</strong> ${escapeHTML(s.parent)}</div>
+<div class="detail-row"><strong>Relationship:</strong> ${escapeHTML(s.relationship)}</div>
+<div class="detail-row"><strong>Phone:</strong> ${escapeHTML(s.phone)}</div>
+<div class="detail-row"><strong>Email:</strong> ${escapeHTML(s.email)}</div>
+<div class="detail-row"><strong>Additional Info:</strong> ${escapeHTML(s.extra)}</div>
+`;
+
+document.getElementById("studentDetails").innerHTML=details;
+
+document.getElementById("detailsModal").classList.add("show");
+
+}
+
+function closeModal(){
+
+document.getElementById("detailsModal").classList.remove("show");
+
+}
+
+// DELETE STUDENT
+
+function deleteStudent(reg){
+
+if(!confirm("Are you sure you want to delete this student?"))return;
+
+students=students.filter(s=>s.reg!==reg);
+
+localStorage.setItem("brightSchool",JSON.stringify(students));
+
+renderStudents();
+
+}
+
+// EXPORT CSV
+
+function exportCSV(){
+
+if(!students.length){
+
+alert("No student records to export.");
+return;
+
+}
+
+let columns=[
+"Registration",
+"First Name",
+"Last Name",
+"Class",
+"Gender",
+"Parent",
+"Phone",
+"Email"
+];
+
+let rows=students.map(s=>[
+s.reg,s.firstName,s.lastName,s.className,
+s.gender,s.parent,s.phone,s.email
+]);
+
+let csv=[columns,...rows].map(row=>
+row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")
+).join("\n");
+
+let blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+
+let link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="Bright-Future-Students.csv";
+link.click();
+
+URL.revokeObjectURL(link.href);
+
+}
+
+// INITIALIZE
+
+document.getElementById("dob").max=
+new Date().toISOString().split("T")[0];
+
+renderStudents();
+
+</script>
+
+</body>
+</html>
